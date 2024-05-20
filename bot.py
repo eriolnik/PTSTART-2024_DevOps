@@ -57,13 +57,13 @@ def findPhoneNumbers (update: Update, context):
     phoneNumRegex = re.compile(r"\+?7[ -]?\(?\d{3}\)?[ -]?\d{3}[ -]?\d{2}[ -]?\d{2}|\+?7[ -]?\d{10}|\+?7[ -]?\d{3}[ -]?\d{3}[ -]?\d{4}|8[ -]?\(?\d{3}\)?[ -]?\d{3}[ -]?\d{2}[ -]?\d{2}|8[ -]?\d{10}|8[ -]?\d{3}[ -]?\d{3}[ -]?\d{4}") 
 
     phoneNumberList = phoneNumRegex.findall(user_input) # Ищем номера телефонов
-
-    context.user_data['phone_numbers'] = phoneNumberList
-    if not phoneNumberList: # Обрабатываем случай, когда номеров телефонов нет
+    unPhoneNumberList = list(set(phoneNumberList)) # Ищем уникальные номера телефонов 
+    context.user_data['phone_numbers'] = unPhoneNumberList
+    if not unPhoneNumberList: # Обрабатываем случай, когда номеров телефонов нет
         update.message.reply_text('Телефонные номера не найдены')
         return # Завершаем выполнение функции
     phoneNumbers = ''
-    for i, phone_number in enumerate(phoneNumberList, start=1):
+    for i, phone_number in enumerate(unPhoneNumberList, start=1):
         phoneNumbers += f'{i}. {phone_number}\n'
 
     update.message.reply_text(phoneNumbers)
